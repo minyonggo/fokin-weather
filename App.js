@@ -1,23 +1,39 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import * as Location from "expo-location";
 import Loading from './Loading';
 
 export default class App extends React.Component {
   state = {
-    latitude : 0,
-    longitude : 0,
+    isLoading: true,
+    latitude: 0,
+    longitude: 0,
   }
   
   getGeolocation = async() => {
-    const currentLocation = await Location.getCurrentPositionAsync(); 
-    this.setState({
-      latitude : currentLocation.coords.latitude,
-      longitude : currentLocation.coords.longitude,
-    });
+    try {
 
-    const {longitude, latitude} = this.state;
-    console.log(latitude, longitude);
+      // throw Error();
+
+      await Location.requestPermissionsAsync();
+
+      const {
+        coords : {
+          latitude, longitude
+        }
+      } = await Location.getCurrentPositionAsync(); 
+
+      this.setState({
+        isLoading : false,
+        latitude : latitude,
+        longitude : longitude,
+      });
+
+    } catch(error) {
+      Alert.alert("Can't find you.", "So sad");
+    }
+
+    
   }
 
   componentDidMount() {
@@ -25,8 +41,9 @@ export default class App extends React.Component {
   }
 
   render() {
+    const {isLoading} = this.state;
     return (
-      <Loading />
+      isLoading ? null : <Loading />
     );
   }
 }
