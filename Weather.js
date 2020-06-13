@@ -50,6 +50,7 @@ export default function Weather ( {temp, condition} ) {
             </View>
             <View style={styles.containerWeatherInfo}>
                 <Text style={styles.weatherInfo}>{condition}</Text>
+                <Text style={styles.greetingWord}>Good Day with STAMPY!</Text>
             </View>
         </LinearGradient>
     );
@@ -87,10 +88,16 @@ const styles = StyleSheet.create({
     containerWeatherInfo : {
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "left",
+        paddingHorizontal: 15
     },
     weatherInfo : {
-        fontsize: "2.5rem",
-        color: "white"
+        fontSize: "2rem",
+        color: "white",
+        marginBottom: 15
+    },
+    greetingWord : {
+        fontSize: "1.5rem",
+        color:"white",
     }
 });
