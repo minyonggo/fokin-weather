@@ -1,19 +1,40 @@
 import React from 'react';
 import { StyleSheet, Text, View, Alert } from 'react-native';
 import * as Location from "expo-location";
-import Loading from './Loading';
 import Axios from 'axios';
+import Loading from './Loading';
+import Weather from './Weather';
 
 export default class App extends React.Component {
   state = {
     isLoading: true,
-    latitude: 0,
-    longitude: 0,
     main: "main_weather",
     description: "description",
+    temp: 0
   }  
   
-  getGeolocation = async() => {
+  async getWeather(latitude, longitude) {
+    const API_KEY = "3fcac35de4a9fd8c7b60370b4a8d23eb";
+    const {
+      data : {
+        weather : [
+          { main, description }
+        ],
+        main : {
+          temp
+        }
+      }
+    } = await Axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
+
+    this.setState({
+      isLoading: false,
+      main: main,
+      description: description,
+      temp: temp,
+    });
+  }
+
+  async getGeolocation() {
     try {
       await Location.requestPermissionsAsync();
 
@@ -23,36 +44,24 @@ export default class App extends React.Component {
         }
       } = await Location.getCurrentPositionAsync(); 
 
-      const API_KEY = "3fcac35de4a9fd8c7b60370b4a8d23eb";
-      const {
-        data : {
-          weather : [
-            { main, description }
-          ]
-        }
-      } = await Axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`);
-
-      this.setState({
-        isLoading: false,
-        latitude: latitude,
-        longitude: longitude,
-        main: main,
-        description: description
-      });
+      this.getWeather(latitude, longitude);
       
     } catch(error) {
       Alert.alert("Can't find you.", "So sad");
     }
   }
 
+
   componentDidMount() {
     this.getGeolocation();
   }
 
   render() {
-    const { isLoading, main, description } = this.state;
+    const { isLoading, temp } = this.state;
     return (
-      isLoading ? null : <Loading main={main} description={description}/>
+      isLoading
+      ? <Loading />
+      : <Weather temp={Math.round(temp)}/>
     );
   }
 }
