@@ -9,7 +9,6 @@ export default class App extends React.Component {
   state = {
     isLoading: true,
     main: "main_weather",
-    description: "description",
     temp: 0
   }  
   
@@ -18,18 +17,15 @@ export default class App extends React.Component {
     const {
       data : {
         weather : [
-          { main, description }
+          { main }
         ],
-        main : {
-          temp
-        }
+        main : { temp },
       }
     } = await Axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
 
     this.setState({
       isLoading: false,
       main: main,
-      description: description,
       temp: temp,
     });
   }
@@ -57,11 +53,11 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { isLoading, temp } = this.state;
+    const { isLoading, temp, main } = this.state;
     return (
       isLoading
       ? <Loading />
-      : <Weather temp={Math.round(temp)}/>
+      : <Weather temp={Math.round(temp)} condition={main}/>
     );
   }
 }
