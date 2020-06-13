@@ -19,7 +19,7 @@ export default class App extends React.Component {
         weather : [
           { main }
         ],
-        main : { temp },
+        main : { temp }
       }
     } = await Axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`);
 
@@ -43,7 +43,7 @@ export default class App extends React.Component {
       this.getWeather(latitude, longitude);
       
     } catch(error) {
-      Alert.alert("Can't find you.", "So sad");
+      Alert.alert("Can't find you!", "So sad");
     }
   }
 

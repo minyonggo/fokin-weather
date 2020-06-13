@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, StatusBar } from 'react-native';
 
 export default function Loading () {
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="dark-content"/>
             <Text style={styles.text}>Getting The Weather</Text>
         </View>
     );
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
         paddingVertical: 100,
     },
     text: {
-        color: "#2c2c2c",
+        color: "#2C2C2C",
         fontSize: 30,
     }
 });
